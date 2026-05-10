@@ -50,7 +50,7 @@ class SwarmContrastiveDecomposition(torch.nn.Module):
             "autocorrelation_whiten": self.config.autocorrelation_whiten,
             "sampling_frequency":     self.config.sampling_frequency,
             "peel_off_window_size":   self.config.peel_off_window_size,
-            "clamp_sources":          self.config.clamp_sources,
+            "adapt_clamp":            self.config.adapt_clamp,
             "edge_mask_size":         self.config.edge_mask_size,
         }
 
@@ -119,22 +119,17 @@ class SwarmContrastiveDecomposition(torch.nn.Module):
         sources = (sources - sources.mean(0)) / sources.std(0)
 
         # Clamp sources to avoid outlying spikes
-        if self.config.clamp_sources:
-
-            if torch.all(self.data.personal_best['spike_heights'] == 0):
-                sources = sources.clamp(max=30)
-            else:
-                for s in range(sources.shape[1]):
-                    if self.data.personal_best['spike_outliers'][s]:
-                        thr = self.data.personal_best['spike_heights'][s]
-                        mu = self.data.personal_best['spike_means'][s]
-                        std = self.data.personal_best['spike_stds'][s]
-                        if torch.isnan(std):
-                            std = 0.5
-                        sources[sources[:,s] > thr, s] = mu + torch.randn_like(sources[sources[:,s] > thr, s]) * std
-                    else:
-                        sources[sources[:,s] > 30, s] = 30
-
+        if self.config.adapt_clamp:
+            for s in range(sources.shape[1]):
+                if self.data.personal_best['spike_outliers'][s]:
+                    thr = self.data.personal_best['spike_heights'][s]
+                    mu = self.data.personal_best['spike_means'][s]
+                    std = self.data.personal_best['spike_stds'][s]
+                    if torch.isnan(std):
+                        std = 0.5
+                    sources[sources[:,s] > thr, s] = mu + torch.randn_like(sources[sources[:,s] > thr, s]) * std
+                else:
+                    sources[sources[:,s] > 30, s] = 30
         else:
             sources = sources.clamp(max=30)
 

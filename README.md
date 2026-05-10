@@ -157,7 +157,7 @@ Configurations are defined in `scd/configs.json`. Available presets:
 | `output_final_source_plot` | Generate plot of final sources | `false` |
 | `use_coeff_var_fitness` | Use coefficient of variation fitness. `true` for EMG, `false` for intracortical | `true` |
 | `remove_bad_fr` | Filter sources with firing rates < 2 Hz or > 100 Hz | `true` |
-| `clamp_sources` | Clamp source amplitudes to ±30 σ during ICA to suppress outliers | `true` |
+| `adapt_clamp` | Adaptively clamp each source using its personal-best spike statistics; falls back to hard ±30 σ when no spike history exists. Set to `false` to always use the fixed ±30 σ hard clamp | `true` |
 
 ### Custom Configuration
 

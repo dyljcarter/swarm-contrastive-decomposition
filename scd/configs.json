@@ -23,7 +23,7 @@
         "peel_off_window_size_ms": 20,
         "peel_off_repeats": true,
         "remove_bad_fr": true,
-        "clamp_sources": true,
+        "adapt_clamp": true,
 
         "max_ica_steps": 1000,
         "ica_patience": 100,
@@ -82,7 +82,7 @@
         "peel_off_window_size_ms": 20,
         "peel_off_repeats": true,
         "remove_bad_fr": true,
-        "clamp_sources": true,
+        "adapt_clamp": true,
 
         "max_ica_steps": 1000,
         "ica_patience": 100,
@@ -141,7 +141,7 @@
         "peel_off_window_size_ms": 25,
         "peel_off_repeats": true,
         "remove_bad_fr": true,
-        "clamp_sources": true,
+        "adapt_clamp": true,
 
         "max_ica_steps": 1000,
         "ica_patience": 100,
