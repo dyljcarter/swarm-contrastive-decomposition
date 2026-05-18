@@ -131,9 +131,9 @@ def source_to_timestamps(
         source.detach().cpu(), height=0, distance=min_peak_separation
     )
     locations = torch.from_numpy(locations).to(device=source.device)
-    heights = torch.from_numpy(properties["peak_heights"]).to(
-        device=source.device, dtype=source.dtype
-    )
+    heights = torch.from_numpy(properties["peak_heights"]).to(device=source.device)
+    if source.device.type == "mps":
+        heights = heights.to(dtype=torch.float32)
 
     # Part 2: K mean/median clustering
     # Set whether to use mean or median for average
