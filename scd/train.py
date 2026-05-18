@@ -128,10 +128,10 @@ def load_config(config_name: str = "default", config_file: Path = None) -> Confi
     logger.info(f"Loaded config: {config_name}")
     return Config(**selected_config)
 
-def load_data(path: Path, key: str = "emg", device: str = "cuda") -> torch.Tensor:
+def load_data(path: Path, key: str = "emg", device: str = None) -> torch.Tensor:
     """
     Load neural data from .mat or .npy file.
-    
+
     Parameters
     ----------
     path : Path
@@ -139,13 +139,20 @@ def load_data(path: Path, key: str = "emg", device: str = "cuda") -> torch.Tenso
     key : str
         Key/variable name in .mat file (default: "emg")
     device : str
-        Device to load tensor to ("cuda" or "cpu")
-    
+        Device to load tensor to ("cuda", "mps", or "cpu"). Defaults to the
+        best available device: CUDA > MPS > CPU.
+
     Returns
     -------
     torch.Tensor
         Neural data with shape (time, channels)
     """
+    if device is None:
+        device = (
+            "cuda" if torch.cuda.is_available()
+            else "mps" if torch.backends.mps.is_available()
+            else "cpu"
+        )
     path = Path(path)
     
     # Load data based on file format

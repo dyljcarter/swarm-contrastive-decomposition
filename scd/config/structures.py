@@ -90,7 +90,11 @@ class Config:
     output_source_plot: bool = False
     output_final_source_plot: bool = False
     verbose_mode: bool = True
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    device: str = (
+        "cuda" if torch.cuda.is_available()
+        else "mps" if torch.backends.mps.is_available()
+        else "cpu"
+    )
     electrode: Optional[Sequence] = None
 
     @property
